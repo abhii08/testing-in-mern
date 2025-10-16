@@ -1,26 +1,123 @@
 name: CI/CD Pipeline
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
 
 jobs:
-  build:
+  test-app-1:
+    name: Test Simple Test App
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
+          cache-dependency-path: '1-simple-test/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: 1-simple-test
+        run: npm ci
+
+      - name: Run tests
+        working-directory: 1-simple-test
+        run: npm run test
+
+  test-app-2:
+    name: Test Simple Express App
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: '2-simple-express-app/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: 2-simple-express-app
+        run: npm ci
+
+      - name: Run tests
+        working-directory: 2-simple-express-app
+        run: npm run test
+
+  test-app-3:
+    name: Test Express with Zod
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: '3-express-with-zod/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: 3-express-with-zod
+        run: npm ci
+
+      - name: Run tests
+        working-directory: 3-express-with-zod
+        run: npm run test
+
+  test-app-4:
+    name: Test Express with Vitest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: '4-express-with-vitest/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: 4-express-with-vitest
+        run: npm ci
+
+      - name: Run tests
+        working-directory: 4-express-with-vitest
+        run: npm run test
+
+  test-app-5:
+    name: Test Express with Vitest and Prisma
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: '5-express-vitest-prisma/package-lock.json'
 
       - name: Install dependencies
         working-directory: 5-express-vitest-prisma
-        run: npm install && npx prisma generate
+        run: npm ci
+
+      - name: Generate Prisma client
+        working-directory: 5-express-vitest-prisma
+        run: npx prisma generate
 
       - name: Run tests
         working-directory: 5-express-vitest-prisma
